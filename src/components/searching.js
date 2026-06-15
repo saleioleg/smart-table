@@ -1,14 +1,15 @@
 import { createComparison, rules } from "../lib/compare.js";
 
 export function initSearching(elements, searchField) {
-  // Создаём компаратор специально для поиска
+  // @todo: #5.1 — настроить компаратор
   const searchCompare = createComparison(
     [rules.skipEmptyTargetValues], // Игнорируем пустые значения
     rules.searchMultipleFields(searchField, ['date', 'customer', 'seller'], false)
   );
 
   return (data, state, action) => {
-    const searchValue = state[searchField] || ''; // Получаем значение поиска из state
+    // @todo: #5.2 — применить компаратор
+    const searchValue = state[searchField] || ''.trim(); // Получаем значение поиска из state
 
     // Если строка поиска пустая — возвращаем данные без изменений
     if (!searchValue) {
