@@ -5,7 +5,7 @@ export function initSearching(searchField) {
   // Создаём компаратор для поиска — используем только skipEmptyTargetValues
   const searchCompare = createComparison([rules.skipEmptyTargetValues], rules.searchMultipleFields(searchField, ['date', 'customer', 'seller'], false));
 
-  return (data, state) => {
+  return (data, state, action) => {
     // Получаем значение из поля поиска (например, из input с name="search")
     const searchValue = state[searchField] || '';
 
