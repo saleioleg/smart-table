@@ -31,19 +31,17 @@ export function initFiltering(elements) {
   };
 
   const applyFiltering = (query, state, action) => {
-    // Если пришло действие очистки конкретного поля
-    if (action && action.name) {
-      clearField(action.name); // очищаем указанное поле
-      return query; // возвращаем чистый query — сбрасываем фильтрацию
+    if (action?.name === "clear") {
+      const fieldName = action.dataset?.field;
+      if (fieldName) {
+        const input = Object.values(elements).find(
+          (el) => el?.name === fieldName,
+        );
+        if (input) input.value = "";
+      }
+      return query;
     }
 
-    // Если пришла общая очистка всех фильтров
-    if (action && action.type === 'CLEAR_ALL_FILTERS') {
-      clearAllFilters(); // очищаем все поля
-      return query; // возвращаем чистый query
-    }
-
-    // Обычная логика фильтрации
     const filter = {};
     Object.keys(elements).forEach((key) => {
       if (elements[key]) {
@@ -59,6 +57,11 @@ export function initFiltering(elements) {
     return Object.keys(filter).length
       ? Object.assign({}, query, filter)
       : query;
+  };
+
+  return {
+    updateIndexes,
+    applyFiltering,
   };
 
   return {
