@@ -12,10 +12,38 @@ export function initFiltering(elements) {
     });
   };
 
-  const applyFiltering = (query, state, action) => {
-    // код с обработкой очистки поля
+  // Очищает конкретное поле по имени
+  const clearField = (fieldName) => {
+    const element = elements[fieldName];
+    if (element && ["INPUT", "SELECT"].includes(element.tagName)) {
+      element.value = '';
+    }
+  };
 
-    // @todo: #4.5 — отфильтровать данные, используя компаратор
+  // Очищает все поля фильтров
+  const clearAllFilters = () => {
+    Object.keys(elements).forEach((key) => {
+      const element = elements[key];
+      if (element && ["INPUT", "SELECT"].includes(element.tagName)) {
+        element.value = '';
+      }
+    });
+  };
+
+  const applyFiltering = (query, state, action) => {
+    // Если пришло действие очистки конкретного поля
+    if (action && action.name) {
+      clearField(action.name); // очищаем указанное поле
+      return query; // возвращаем чистый query — сбрасываем фильтрацию
+    }
+
+    // Если пришла общая очистка всех фильтров
+    if (action && action.type === 'CLEAR_ALL_FILTERS') {
+      clearAllFilters(); // очищаем все поля
+      return query; // возвращаем чистый query
+    }
+
+    // Обычная логика фильтрации
     const filter = {};
     Object.keys(elements).forEach((key) => {
       if (elements[key]) {
@@ -23,19 +51,20 @@ export function initFiltering(elements) {
           ["INPUT", "SELECT"].includes(elements[key].tagName) &&
           elements[key].value
         ) {
-          // ищем поля ввода в фильтре с непустыми данными
-          filter[`filter[${elements[key].name}]`] = elements[key].value; // чтобы сформировать в query вложенный объект фильтра
+          filter[`filter[${elements[key].name}]`] = elements[key].value;
         }
       }
     });
 
     return Object.keys(filter).length
       ? Object.assign({}, query, filter)
-      : query; // если в фильтре что-то добавилось, применим к запросу
+      : query;
   };
 
   return {
     updateIndexes,
     applyFiltering,
+    clearField,
+    clearAllFilters,
   };
 }
