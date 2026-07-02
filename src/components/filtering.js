@@ -12,24 +12,6 @@ export function initFiltering(elements) {
     });
   };
 
-  // Очищает конкретное поле по имени
-  const clearField = (fieldName) => {
-    const element = elements[fieldName];
-    if (element && ["INPUT", "SELECT"].includes(element.tagName)) {
-      element.value = '';
-    }
-  };
-
-  // Очищает все поля фильтров
-  const clearAllFilters = () => {
-    Object.keys(elements).forEach((key) => {
-      const element = elements[key];
-      if (element && ["INPUT", "SELECT"].includes(element.tagName)) {
-        element.value = '';
-      }
-    });
-  };
-
   const applyFiltering = (query, state, action) => {
     if (action?.name === "clear") {
       const fieldName = action.dataset?.field;
@@ -62,12 +44,5 @@ export function initFiltering(elements) {
   return {
     updateIndexes,
     applyFiltering,
-  };
-
-  return {
-    updateIndexes,
-    applyFiltering,
-    clearField,
-    clearAllFilters,
   };
 }
